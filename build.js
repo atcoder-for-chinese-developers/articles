@@ -97,6 +97,7 @@ function build() {
 	});
 	fs.writeFileSync('dist/list.json', JSON.stringify(siteList));
 	fs.writeFileSync('dist/commitInfo.json', fs.readFileSync('commitInfo/commitInfo.json'));
+	fs.writeFileSync('dist/index.html', '');
 }
 
 makeDist();
