@@ -1,0 +1,28 @@
+{
+  "name": "articles",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "bash build.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atcoder-for-chinese-developers/articles.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/atcoder-for-chinese-developers/articles/issues"
+  },
+  "homepage": "https://github.com/atcoder-for-chinese-developers/articles#readme",
+  "dependencies": {
+    "escape-html": "^1.0.3",
+    "jsdom": "^22.1.0",
+    "katex": "^0.16.8",
+    "markdown-it": "^13.0.1",
+    "markdown-it-anchor": "^8.6.7",
+    "markdown-it-texmath": "^1.0.0",
+    "prismjs": "^1.29.0",
+    "yaml-front-matter": "^4.1.1"
+  }
+}
