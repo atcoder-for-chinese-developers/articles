@@ -15,8 +15,7 @@ node build.js
 
 rm -rf commitInfo;
 
-#mkdir commitInfo
-#for f in src/*; do
-#    git log --format="{\"id\": \"%H\", \"short\": \"%h\", \"date\": \"%cI\"}" $f | head -1 > ${f/src\//commitInfo\/}.json
-#done
-#git log --format="{\"id\": \"%H\", \"short\": \"%h\", \"date\": \"%cI\"}" | head -1 > commitInfo/global.json
+
+if [ -d $STATIC_DIR -a $STATIC_DIR ]; then
+    \cp -r $STATIC_DIR/* dist
+fi;

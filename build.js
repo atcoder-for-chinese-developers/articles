@@ -64,30 +64,34 @@ function build() {
 				fs.mkdirSync('dist/' + site + '/' + contest + '/' + problem);
 				let problemPath = site + '/' + contest + '/' + problem;
 				let problemArticleList = {'translations': {}, 'solutions': {}};
-				availableList[contest + '/' + problem] = 0;
+				availableList[contest + '/' + problem] = [0, 0];
 				typeList.forEach(type => {
 					fs.mkdirSync('dist/' + site + '/' + contest + '/' + problem + '/' + type);
-					if (fs.existsSync('src/' + problemPath + '/' + type)) {
-						if (type == 'translations') availableList[contest + '/' + problem] += 1;
-						if (type == 'solutions') availableList[contest + '/' + problem] += 2;
-					} else return;
+					if (!fs.existsSync('src/' + problemPath + '/' + type)) return;
 					let articleList = fs.readdirSync('src/' + problemPath + '/' + type);
 					articleList.forEach(article => {
-						fs.mkdirSync('dist/' + site + '/' + contest + '/' + problem + '/' + type + '/' + article);;
-						let articlePath = problemPath + '/' + type + '/' + article;
-						let articleInfo = {};
-						let articleObject = {};
-						let loaded = yamlFront.loadFront(fs.readFileSync('src/' + articlePath + '/README.md'));
-						let lastCommit = JSON.parse(fs.readFileSync('commitInfo/src/' + articlePath + '/commitInfo.json'));
-						let source = loaded.__content.trim();
-						articleObject.rendered = md.render(source);
-						articleInfo = loaded;
-						delete articleInfo.__content;
-						articleInfo.lastCommit = lastCommit;
-						articleObject.articleInfo = articleInfo;
-						fs.writeFileSync('dist/' + articlePath + '/source.md', source);
-						fs.writeFileSync('dist/' + articlePath + '/data.json', JSON.stringify(articleObject));
-						problemArticleList[type][article] = articleInfo;
+						try {
+							let articlePath = problemPath + '/' + type + '/' + article;
+							let articleInfo = {};
+							let articleObject = {};
+							let loaded = yamlFront.loadFront(fs.readFileSync('src/' + articlePath + '/README.md'));
+							let lastCommit = JSON.parse(fs.readFileSync('commitInfo/src/' + articlePath + '/commitInfo.json'));
+							let source = loaded.__content.trim();
+							articleObject.rendered = md.render(source);
+							articleInfo = loaded;
+							delete articleInfo.__content;
+							articleInfo.lastCommit = lastCommit;
+							articleObject.articleInfo = articleInfo;
+							fs.mkdirSync('dist/' + site + '/' + contest + '/' + problem + '/' + type + '/' + article);;
+							fs.writeFileSync('dist/' + articlePath + '/source.md', source);
+							fs.writeFileSync('dist/' + articlePath + '/data.json', JSON.stringify(articleObject));
+							problemArticleList[type][article] = articleInfo;
+							if (type == 'translations') availableList[contest + '/' + problem][0]++;
+							if (type == 'solutions') availableList[contest + '/' + problem][1]++;
+						} catch (e) {
+							console.log('Failed to compile %s/%s/%s/%s/%s', site, contest, problem, type, article);
+							console.log(e);
+						}
 					});
 				});
 				fs.writeFileSync('dist/' + problemPath + '/list.json', JSON.stringify(problemArticleList));
