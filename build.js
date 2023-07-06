@@ -99,7 +99,12 @@ function build() {
 		});
 		fs.writeFileSync('dist/' + site + '/list.json', JSON.stringify(availableList));
 	});
-	fs.writeFileSync('dist/list.json', JSON.stringify(siteList));
+	let list = {};
+	for (site of siteList) {
+		let commitInfo = JSON.parse(fs.readFileSync(`commitInfo/src/${site}/commitInfo.json`));
+		list[site] = commitInfo;
+	}
+	fs.writeFileSync('dist/list.json', JSON.stringify(list));
 	fs.writeFileSync('dist/commitInfo.json', fs.readFileSync('commitInfo/commitInfo.json'));
 }
 
