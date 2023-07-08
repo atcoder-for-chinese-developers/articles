@@ -55,47 +55,43 @@ function build() {
 	let siteList = dirList.filter(name => name != 'pages');
 	siteList.forEach(site => {
 		fs.mkdirSync('dist/' + site);
-		let contestList = fs.readdirSync('src/' + site);
+		let problemList = fs.readdirSync('src/' + site);
 		let availableList = {};
-		contestList.forEach(contest => {
-			fs.mkdirSync('dist/' + site + '/' + contest);
-			let problemList = fs.readdirSync('src/' + site + '/' + contest);
-			problemList.forEach(problem => {
-				fs.mkdirSync('dist/' + site + '/' + contest + '/' + problem);
-				let problemPath = site + '/' + contest + '/' + problem;
-				let problemArticleList = {'translations': {}, 'solutions': {}};
-				availableList[contest + '/' + problem] = [0, 0];
-				typeList.forEach(type => {
-					fs.mkdirSync('dist/' + site + '/' + contest + '/' + problem + '/' + type);
-					if (!fs.existsSync('src/' + problemPath + '/' + type)) return;
-					let articleList = fs.readdirSync('src/' + problemPath + '/' + type);
-					articleList.forEach(article => {
-						try {
-							let articlePath = problemPath + '/' + type + '/' + article;
-							let articleInfo = {};
-							let articleObject = {};
-							let loaded = yamlFront.loadFront(fs.readFileSync('src/' + articlePath + '/README.md'));
-							let lastCommit = JSON.parse(fs.readFileSync('commitInfo/src/' + articlePath + '/commitInfo.json'));
-							let source = loaded.__content.trim();
-							articleObject.rendered = md.render(source);
-							articleInfo = loaded;
-							delete articleInfo.__content;
-							articleInfo.lastCommit = lastCommit;
-							articleObject.articleInfo = articleInfo;
-							fs.mkdirSync('dist/' + site + '/' + contest + '/' + problem + '/' + type + '/' + article);;
-							fs.writeFileSync('dist/' + articlePath + '/source.md', source);
-							fs.writeFileSync('dist/' + articlePath + '/data.json', JSON.stringify(articleObject));
-							problemArticleList[type][article] = articleInfo;
-							if (type == 'translations') availableList[contest + '/' + problem][0]++;
-							if (type == 'solutions') availableList[contest + '/' + problem][1]++;
-						} catch (e) {
-							console.log('Failed to compile %s/%s/%s/%s/%s', site, contest, problem, type, article);
-							console.log(e);
-						}
-					});
+		problemList.forEach(problem => {
+			fs.mkdirSync('dist/' + site + '/' + problem);
+			let problemPath = site + '/' + problem;
+			let problemArticleList = {'translations': {}, 'solutions': {}};
+			availableList[problem] = [0, 0];
+			typeList.forEach(type => {
+				fs.mkdirSync('dist/' + site + '/' + problem + '/' + type);
+				if (!fs.existsSync('src/' + problemPath + '/' + type)) return;
+				let articleList = fs.readdirSync('src/' + problemPath + '/' + type);
+				articleList.forEach(article => {
+					try {
+						let articlePath = problemPath + '/' + type + '/' + article;
+						let articleInfo = {};
+						let articleObject = {};
+						let loaded = yamlFront.loadFront(fs.readFileSync('src/' + articlePath + '/README.md'));
+						let lastCommit = JSON.parse(fs.readFileSync('commitInfo/src/' + articlePath + '/commitInfo.json'));
+						let source = loaded.__content.trim();
+						articleObject.rendered = md.render(source);
+						articleInfo = loaded;
+						delete articleInfo.__content;
+						articleInfo.lastCommit = lastCommit;
+						articleObject.articleInfo = articleInfo;
+						fs.mkdirSync('dist/' + site + '/' + problem + '/' + type + '/' + article);;
+						fs.writeFileSync('dist/' + articlePath + '/source.md', source);
+						fs.writeFileSync('dist/' + articlePath + '/data.json', JSON.stringify(articleObject));
+						problemArticleList[type][article] = articleInfo;
+						if (type == 'translations') availableList[problem][0]++;
+						if (type == 'solutions') availableList[problem][1]++;
+					} catch (e) {
+						console.log('Failed to compile %s/%s/%s/%s', site, problem, type, article);
+						console.log(e);
+					}
 				});
-				fs.writeFileSync('dist/' + problemPath + '/list.json', JSON.stringify(problemArticleList));
 			});
+			fs.writeFileSync('dist/' + problemPath + '/list.json', JSON.stringify(problemArticleList));
 		});
 		fs.writeFileSync('dist/' + site + '/list.json', JSON.stringify(availableList));
 	});

@@ -16,9 +16,9 @@ done
 
 git log --format="{\"id\": \"%H\", \"short\": \"%h\", \"date\": \"%cI\"}" . | head -1 > commitInfo/commitInfo.json;
 
-node build.js
+#node build.js
 
-rm -rf commitInfo;
+#rm -rf commitInfo;
 
 if [ -d $STATIC_DIR -a $STATIC_DIR ]; then
     \cp -r $STATIC_DIR/* dist
