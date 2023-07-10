@@ -2,7 +2,7 @@
 title: "Codeforces 1 A. Theatre Square 翻译"
 tags: []
 author: "e3c8f1a924"
-created: ""
+created: "2023-7-10 21:20"
 ---
 
 ## 题意
