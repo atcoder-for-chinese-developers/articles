@@ -60,7 +60,7 @@ function build() {
 		problemList.forEach(problem => {
 			fs.mkdirSync('dist/' + site + '/' + problem);
 			let problemPath = site + '/' + problem;
-			let problemArticleList = {'translations': {}, 'solutions': {}};
+			let problemArticleList = {'translations': [], 'solutions': []};
 			availableList[problem] = [0, 0];
 			typeList.forEach(type => {
 				fs.mkdirSync('dist/' + site + '/' + problem + '/' + type);
@@ -82,7 +82,8 @@ function build() {
 						fs.mkdirSync('dist/' + site + '/' + problem + '/' + type + '/' + article);;
 						fs.writeFileSync('dist/' + articlePath + '/source.md', source);
 						fs.writeFileSync('dist/' + articlePath + '/data.json', JSON.stringify(articleObject));
-						problemArticleList[type][article] = articleInfo;
+						articleInfo.id = article;
+						problemArticleList[type].push(articleInfo);
 						if (type == 'translations') availableList[problem][0]++;
 						if (type == 'solutions') availableList[problem][1]++;
 					} catch (e) {
